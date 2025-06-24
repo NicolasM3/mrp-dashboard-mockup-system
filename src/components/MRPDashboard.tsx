@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Package, 
@@ -14,8 +13,21 @@ import {
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 const MRPDashboard = () => {
+  const { toast } = useToast();
+
+  const handleModuleClick = (moduleName: string) => {
+    toast({
+      title: `Acessando ${moduleName}`,
+      description: `Redirecionando para o módulo ${moduleName}...`,
+    });
+    
+    // Log the action for development purposes
+    console.log(`Navigating to ${moduleName} module`);
+  };
+
   const mainFunctions = [
     {
       title: "Plano Mestre de Produção (MPS)",
@@ -23,7 +35,8 @@ const MRPDashboard = () => {
       icon: Calendar,
       color: "bg-blue-500 hover:bg-blue-600",
       textColor: "text-blue-700",
-      bgColor: "bg-blue-50"
+      bgColor: "bg-blue-50",
+      action: () => handleModuleClick("Plano Mestre de Produção (MPS)")
     },
     {
       title: "Planejamento das Necessidades (MRP)",
@@ -31,7 +44,8 @@ const MRPDashboard = () => {
       icon: Settings,
       color: "bg-green-500 hover:bg-green-600",
       textColor: "text-green-700",
-      bgColor: "bg-green-50"
+      bgColor: "bg-green-50",
+      action: () => handleModuleClick("Planejamento das Necessidades (MRP)")
     },
     {
       title: "Validar Capacidade (RCCP/CRP)",
@@ -39,7 +53,8 @@ const MRPDashboard = () => {
       icon: CheckCircle,
       color: "bg-purple-500 hover:bg-purple-600",
       textColor: "text-purple-700",
-      bgColor: "bg-purple-50"
+      bgColor: "bg-purple-50",
+      action: () => handleModuleClick("Validar Capacidade (RCCP/CRP)")
     },
     {
       title: "Gerar Ordens de Compra",
@@ -47,7 +62,8 @@ const MRPDashboard = () => {
       icon: ShoppingCart,
       color: "bg-orange-500 hover:bg-orange-600",
       textColor: "text-orange-700",
-      bgColor: "bg-orange-50"
+      bgColor: "bg-orange-50",
+      action: () => handleModuleClick("Gerar Ordens de Compra")
     },
     {
       title: "Gerar Ordens de Fabricação",
@@ -55,7 +71,8 @@ const MRPDashboard = () => {
       icon: Factory,
       color: "bg-red-500 hover:bg-red-600",
       textColor: "text-red-700",
-      bgColor: "bg-red-50"
+      bgColor: "bg-red-50",
+      action: () => handleModuleClick("Gerar Ordens de Fabricação")
     },
     {
       title: "Consultar Estoque",
@@ -63,7 +80,8 @@ const MRPDashboard = () => {
       icon: Package,
       color: "bg-teal-500 hover:bg-teal-600",
       textColor: "text-teal-700",
-      bgColor: "bg-teal-50"
+      bgColor: "bg-teal-50",
+      action: () => handleModuleClick("Consultar Estoque")
     }
   ];
 
@@ -143,6 +161,7 @@ const MRPDashboard = () => {
                   {func.description}
                 </p>
                 <Button 
+                  onClick={func.action}
                   className={`w-full ${func.color} text-white font-medium py-2 px-4 rounded-lg transition-colors`}
                 >
                   Acessar Módulo
