@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Package, 
   Settings, 
@@ -9,24 +9,75 @@ import {
   AlertTriangle,
   TrendingUp,
   Users,
-  Calendar
+  Calendar,
+  ArrowLeft
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import MPSChart from './charts/MPSChart';
+import MRPChart from './charts/MRPChart';
+import CapacityChart from './charts/CapacityChart';
+import PurchaseChart from './charts/PurchaseChart';
+import ProductionChart from './charts/ProductionChart';
+import StockChart from './charts/StockChart';
 
 const MRPDashboard = () => {
   const { toast } = useToast();
+  const [activeModule, setActiveModule] = useState<string | null>(null);
 
   const handleModuleClick = (moduleName: string) => {
     toast({
       title: `Acessando ${moduleName}`,
-      description: `Redirecionando para o módulo ${moduleName}...`,
+      description: `Carregando dados do módulo ${moduleName}...`,
     });
     
-    // Log the action for development purposes
     console.log(`Navigating to ${moduleName} module`);
+    setActiveModule(moduleName);
   };
+
+  const handleBackToDashboard = () => {
+    setActiveModule(null);
+  };
+
+  const renderChart = () => {
+    switch (activeModule) {
+      case "Plano Mestre de Produção (MPS)":
+        return <MPSChart />;
+      case "Planejamento das Necessidades (MRP)":
+        return <MRPChart />;
+      case "Validar Capacidade (RCCP/CRP)":
+        return <CapacityChart />;
+      case "Gerar Ordens de Compra":
+        return <PurchaseChart />;
+      case "Gerar Ordens de Fabricação":
+        return <ProductionChart />;
+      case "Consultar Estoque":
+        return <StockChart />;
+      default:
+        return null;
+    }
+  };
+
+  // If a module is active, show the chart view
+  if (activeModule) {
+    return (
+      <div className="p-6 bg-gray-50 min-h-screen">
+        <div className="mb-6">
+          <Button 
+            onClick={handleBackToDashboard}
+            variant="outline"
+            className="mb-4"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Voltar ao Dashboard
+          </Button>
+          <h1 className="text-3xl font-bold text-gray-800">{activeModule}</h1>
+        </div>
+        {renderChart()}
+      </div>
+    );
+  }
 
   const mainFunctions = [
     {
