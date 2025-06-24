@@ -12,15 +12,37 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { useNavigate, useLocation } from 'react-router-dom';
 import MRPDashboard from './MRPDashboard';
 
-const MRPLayout = () => {
+interface MRPLayoutProps {
+  children?: React.ReactNode;
+}
+
+const MRPLayout = ({ children }: MRPLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
-    { icon: Home, label: 'Dashboard', active: true },
-    { icon: BarChart3, label: 'Relatórios', active: false },
-    { icon: Settings, label: 'Configurações', active: false },
+    { 
+      icon: Home, 
+      label: 'Dashboard', 
+      active: location.pathname === '/',
+      onClick: () => navigate('/')
+    },
+    { 
+      icon: BarChart3, 
+      label: 'Relatórios', 
+      active: location.pathname === '/reports',
+      onClick: () => navigate('/reports')
+    },
+    { 
+      icon: Settings, 
+      label: 'Configurações', 
+      active: false,
+      onClick: () => {}
+    },
   ];
 
   return (
@@ -71,6 +93,7 @@ const MRPLayout = () => {
                   className={`w-full justify-start text-white hover:bg-slate-700 ${
                     item.active ? 'bg-slate-700' : ''
                   }`}
+                  onClick={item.onClick}
                 >
                   <item.icon className="h-5 w-5" />
                   {sidebarOpen && <span className="ml-3">{item.label}</span>}
@@ -98,7 +121,9 @@ const MRPLayout = () => {
         <header className="bg-white shadow-sm border-b border-gray-200 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <h2 className="text-xl font-semibold text-gray-800">Dashboard Principal</h2>
+              <h2 className="text-xl font-semibold text-gray-800">
+                {location.pathname === '/reports' ? 'Relatórios' : 'Dashboard Principal'}
+              </h2>
             </div>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" className="relative">
@@ -116,7 +141,7 @@ const MRPLayout = () => {
 
         {/* Main Dashboard Content */}
         <main className="flex-1 overflow-auto">
-          <MRPDashboard />
+          {children || <MRPDashboard />}
         </main>
       </div>
     </div>
